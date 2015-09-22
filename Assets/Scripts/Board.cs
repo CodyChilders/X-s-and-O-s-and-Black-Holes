@@ -14,7 +14,6 @@ public class Board
     #region constructors
     public Board()
     {
-        CreateNewBoard(0, 0);
         movesPerformed = 0;
         winner = CellStates.Empty;
     }
@@ -37,11 +36,13 @@ public class Board
             {
                 Vector3 position = new Vector3(x + i, 0, y + j);
                 cells[i, j] = GameObject.Instantiate(TTTPrefabContainer.cell, position, Quaternion.identity) as GameObject;
+                cells[i, j].transform.parent = TTTPrefabContainer.tttParentObject.transform;
             }
         }
         //build lines
         Vector3 newPosition = new Vector3(x + 1, 0, y + 1);
         lines = GameObject.Instantiate(TTTPrefabContainer.smallBoard, newPosition, Quaternion.identity) as GameObject;
+        lines.transform.parent = TTTPrefabContainer.tttParentObject.transform;
     }
     #endregion
 

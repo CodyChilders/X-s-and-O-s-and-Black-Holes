@@ -5,6 +5,7 @@ public class BuildTicTacToeBoard : MonoBehaviour
 {
     public const int desiredDepth = 2; //how many recursive levels before you hit a standard game
 
+    //The piece that is playable
     public GameObject cellBackground;
 
     //smallest board grid
@@ -13,8 +14,10 @@ public class BuildTicTacToeBoard : MonoBehaviour
     public GameObject mediumBoardLines;
     //largest board grid
     public GameObject largeBoardLines;
-
+    //instance of the parent board that holds every smaller one
     public BoardContainer parentBoard;
+    //child objects get this as their parent, to keep the scene hierarchy clean
+    public GameObject parentObject;
 
     void Awake()
     {
@@ -29,6 +32,7 @@ public class BuildTicTacToeBoard : MonoBehaviour
         TTTPrefabContainer.mediumBoard = mediumBoardLines;
         TTTPrefabContainer.smallBoard = smallBoardLines;
         TTTPrefabContainer.cell = cellBackground;
+        TTTPrefabContainer.tttParentObject = parentObject;
     }
 }
 

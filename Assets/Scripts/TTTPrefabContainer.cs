@@ -9,4 +9,6 @@ public class TTTPrefabContainer : MonoBehaviour
     public static GameObject mediumBoard;
     public static GameObject smallBoard;
     public static GameObject cell;
+
+    public static GameObject tttParentObject;
 }

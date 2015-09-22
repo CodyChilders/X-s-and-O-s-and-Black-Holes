@@ -10,14 +10,13 @@ public class BoardContainer : Board
     #region constructors
     public BoardContainer()
     {
-
+        //Unnecessary, but this has to satisfy the compiler
     }
 
     public BoardContainer(int x, int y, int depth)
     {
         position = new Vector2(x, y);
         this.depth = depth;
-        movesPerformed = 0;
         CreateNewBoard();
     }
     #endregion
@@ -62,6 +61,7 @@ public class BoardContainer : Board
                 break;
         }
         lines = GameObject.Instantiate(linesToClone, linesPosition, Quaternion.identity) as GameObject;
+        lines.transform.parent = TTTPrefabContainer.tttParentObject.transform;
     }
 
     public override void CheckWin()

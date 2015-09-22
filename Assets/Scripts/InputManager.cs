@@ -13,7 +13,7 @@ public class InputManager : MonoBehaviour
 
     void Start()
     {
-        currentState = defaultState;
+        SetCurrentState(defaultState);
         ttt = GetComponent<TTTGameManager>();
         sw = GetComponent<SWGameManager>();
         parentBoard = GetComponent<BuildTicTacToeBoard>().parentBoard;
@@ -36,6 +36,11 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    private void SetCurrentState(GameState state)
+    {
+        currentState = defaultState;
+    }
+
     private void TTTUpdate()
     {
         if (ttt)
@@ -48,10 +53,6 @@ public class InputManager : MonoBehaviour
     //Just kick start the recursive win checking with this
     public void TTTCheckWinStates()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            int breakpoint = 0;
-        }
         if (parentBoard != null)
             parentBoard.CheckWin();
         else
