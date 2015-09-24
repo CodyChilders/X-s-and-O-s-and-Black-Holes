@@ -75,9 +75,12 @@
     <Compile Include="Assets\Scripts\BoardContainer.cs" />
     <Compile Include="Assets\Scripts\BuildTicTacToeBoard.cs" />
     <Compile Include="Assets\Scripts\CellStatus.cs" />
+    <Compile Include="Assets\Scripts\GetAllChildGameObjects.cs" />
     <Compile Include="Assets\Scripts\GloweynessModifier.cs" />
     <Compile Include="Assets\Scripts\InputManager.cs" />
     <Compile Include="Assets\Scripts\SWGameManager.cs" />
+    <Compile Include="Assets\Scripts\SlashSlash.cs" />
+    <Compile Include="Assets\Scripts\SlashSlashEditor.cs" />
     <Compile Include="Assets\Scripts\TTTGameManager.cs" />
     <Compile Include="Assets\Scripts\TTTPrefabContainer.cs" />
     <Compile Include="Assets\_MKGlowSystem\_Demo\Code\MK_DemoControl.cs" />

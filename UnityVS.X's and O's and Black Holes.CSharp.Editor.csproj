@@ -90,12 +90,6 @@
     <Reference Include="UnityEditor.OSXStandalone.Extensions">
       <HintPath>Library\UnityAssemblies\UnityEditor.OSXStandalone.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>Library\UnityAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
     </Reference>
@@ -105,14 +99,14 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Messaging">
       <HintPath>Assets\UnityVS\Editor\SyntaxTree.VisualStudio.Unity.Messaging.dll</HintPath>
     </Reference>
+    <Reference Include="UnityVS.VersionSpecific">
+      <HintPath>Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll</HintPath>
+    </Reference>
     <Reference Include="MKGlowSystem">
       <HintPath>Assets\_MKGlowSystem\_Internal\MKGlowSystem.dll</HintPath>
     </Reference>
     <Reference Include="MKGlowSystemEditor">
       <HintPath>Assets\_MKGlowSystem\_Internal\Editor\MKGlowSystemEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityVS.VersionSpecific">
-      <HintPath>Assets\UnityVS\Editor\UnityVS.VersionSpecific.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
+    <Compile Include="Assets\Editor\SlashSlashEditor.cs" />
     <Compile Include="Assets\_MKGlowSystem\_Internal\Editor\MK_StandardShaderGUI.cs" />
   </ItemGroup>
   <ItemGroup>
