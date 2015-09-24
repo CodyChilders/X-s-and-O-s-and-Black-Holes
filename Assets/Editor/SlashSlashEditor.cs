@@ -13,12 +13,11 @@ public class SlashSlashEditor : Editor
         EditorStyles.textField.wordWrap = true;
         myTarget.comment = EditorGUILayout.TextField("", myTarget.comment, GUILayout.MaxHeight(100));
 
-        bool deleteOnPlay = EditorGUILayout.Toggle("Free memory on play", myTarget.deleteStringOnPlay);
+        bool deleteOnPlay = EditorGUILayout.Toggle("Delete on start", myTarget.deleteStringOnPlay);
         myTarget.deleteStringOnPlay = deleteOnPlay;
         if (deleteOnPlay)
         {
-            myTarget.deleteOnlyInReleaseMode = EditorGUILayout.Toggle("Free memory only in release mode", myTarget.deleteOnlyInReleaseMode);
+            myTarget.deleteOnlyInReleaseMode = EditorGUILayout.Toggle("Delete only in release", myTarget.deleteOnlyInReleaseMode);
         }
-        //EditorGUILayout.LabelField("Level", myTarget.Level.ToString());
     }
 }

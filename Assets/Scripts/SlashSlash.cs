@@ -33,7 +33,7 @@ public class SlashSlash : MonoBehaviour
         bool deleteFlag = true; //this flag can be set to false under certain conditions
         if (deleteOnlyInReleaseMode)
         {
-            if (!Debug.isDebugBuild)
+            if (Debug.isDebugBuild)
                 deleteFlag = false;
         }
         //free up the memory if all checks pass
