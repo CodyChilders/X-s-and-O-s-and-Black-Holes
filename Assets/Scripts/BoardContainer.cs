@@ -180,9 +180,31 @@ public class BoardContainer : Board
                 {
                     //CheckWin(); This line caused a stack overflow?
                     Debug.Log("Win checking for board container happens here");
+                    OverwriteBoardWithWinner();
                 }
             }
         }
         lines.gameObject.SetActive(false);
+    }
+
+    //This method finds all cells in the game, and forces them to take the winner's piece
+    //This breaks the generazation of the data structure, as this method assumes that the
+    //Instance of BoardContainer calling this method is the top level.  This can be assumed
+    //Since the animations aren't generalized like the original 2D implementation.
+    private void OverwriteBoardWithWinner()
+    {
+        //Forcing a win condition code
+        CellStatus.Piece winningPiece = (winner == CellStates.P1 ? CellStatus.Piece.X : CellStatus.Piece.O);
+        GameObject[] allCells = GameObject.FindGameObjectsWithTag("Cell");
+        foreach (GameObject go in allCells)
+        {
+            go.GetComponent<CellStatus>().ForcePiece(winningPiece);
+        }
+        //Hiding the lines code
+        GameObject[] allLines = GameObject.FindGameObjectsWithTag("Lines");
+        foreach (GameObject go in allLines)
+        {
+            go.SetActive(false);
+        }
     }
 }
