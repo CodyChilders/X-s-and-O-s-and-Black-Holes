@@ -26,6 +26,7 @@ public class CellStatus : MonoBehaviour
             return;
         GameObject instantiateThis = (which == Piece.X ? x : o);
         playedPiece = Instantiate(instantiateThis, this.transform.position, Quaternion.identity) as GameObject;
+        playedPiece.transform.SetParent(this.gameObject.transform);
         playedPieceType = which;
     }
 
@@ -42,6 +43,7 @@ public class CellStatus : MonoBehaviour
         //create the new piece in this place
         GameObject instantiateThis = (which == Piece.X ? x : o);
         playedPiece = Instantiate(instantiateThis, this.transform.position, Quaternion.identity) as GameObject;
+        playedPiece.transform.SetParent(this.gameObject.transform);
     }
 
     public Piece CurrentPiece

@@ -24,6 +24,7 @@ public class SWGameManager : MonoBehaviour
     public void InitSW()
     {
         SetShips();
+        SetCameras();
     }
 
     private void SetShips()
