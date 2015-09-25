@@ -189,8 +189,8 @@ public class BoardContainer : Board
 
     //This method finds all cells in the game, and forces them to take the winner's piece
     //This breaks the generazation of the data structure, as this method assumes that the
-    //Instance of BoardContainer calling this method is the top level.  This can be assumed
-    //Since the animations aren't generalized like the original 2D implementation.
+    //instance of BoardContainer calling this method is the top level.  This can be assumed
+    //since the models aren't generalized like the original 2D implementation.
     private void OverwriteBoardWithWinner()
     {
         //Forcing a win condition code
