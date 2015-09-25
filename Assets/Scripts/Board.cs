@@ -114,6 +114,28 @@ public class Board
                 return;
             }
         }
+        if (winner == CellStates.Empty && ThisBoardIsFull())
+        {
+            Debug.Log("Tie detected");
+            GameObject.Find("Controller Scripts").GetComponent<InputManager>().SetContestedBoard(this);
+        }
+    }
+
+    private bool ThisBoardIsFull()
+    {
+        int spacesFilled = 0;
+        for (int i = 0; i < cells.GetLength(0); i++)
+        {
+            for (int j = 0; j < cells.GetLength(1); j++)
+            {
+                CellStatus.Piece p = cells[i, j].GetComponent<CellStatus>().CurrentPiece;
+                if(p != CellStatus.Piece.None)
+                {
+                    spacesFilled++;
+                }
+            }
+        }
+        return spacesFilled == 9;
     }
 
     //it is easier for the caller to pass in 6, but easier for the function to process 3

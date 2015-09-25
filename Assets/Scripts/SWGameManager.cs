@@ -6,6 +6,8 @@ public class SWGameManager : MonoBehaviour
     public GameObject p1Ship;
     public GameObject p2Ship;
 
+    public GameObject p1ShipStartPosition;
+    public GameObject p2ShipStartPosition;
 
     void Start()
     {
@@ -21,6 +23,19 @@ public class SWGameManager : MonoBehaviour
     //and set the ships to their starting position
     public void InitSW()
     {
-        print("SWGameManager.InitSW called");
+        SetShips();
+    }
+
+    private void SetShips()
+    {
+        p1Ship.transform.position = p1ShipStartPosition.transform.position;
+        p2Ship.transform.position = p2ShipStartPosition.transform.position;
+        p1Ship.transform.LookAt(p2Ship.transform);
+        p2Ship.transform.LookAt(p1Ship.transform);
+    }
+
+    private void SetCameras()
+    {
+        print("SetCameras called");
     }
 }
