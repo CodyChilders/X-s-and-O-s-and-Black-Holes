@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\GloweynessModifier.cs" />
     <Compile Include="Assets\Scripts\InputManager.cs" />
     <Compile Include="Assets\Scripts\SWGameManager.cs" />
+    <Compile Include="Assets\Scripts\ShipControls.cs" />
     <Compile Include="Assets\Scripts\ShowEnemyShip.cs" />
     <Compile Include="Assets\Scripts\SlashSlash.cs" />
     <Compile Include="Assets\Scripts\SlashSlashEditor.cs" />
