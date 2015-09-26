@@ -31,7 +31,7 @@ public class ShowEnemyShip : MonoBehaviour
     void OnGUI()
     {
         Vector3 screenPoint = c.WorldToScreenPoint(otherShip.transform.position);
-        Vector2 displayPoint = new Vector2(screenPoint.x, screenPoint.y);
+        Vector2 displayPoint = new Vector2(screenPoint.x, Screen.height - screenPoint.y);
         displayPoint.x -= imageWidth  / 2f;
         displayPoint.y -= imageHeight / 2f;
         GUI.color = targetColor;

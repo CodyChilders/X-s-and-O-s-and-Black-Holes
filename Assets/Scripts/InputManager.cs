@@ -116,6 +116,7 @@ public class InputManager : MonoBehaviour
                 break;
         }
     }
+
     #region specifc state switches
     /********************************************
      * Within this region, set all the specific *
