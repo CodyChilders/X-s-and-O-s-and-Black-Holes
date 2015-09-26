@@ -7,9 +7,8 @@ public class InputManager : MonoBehaviour
     private GameState currentState;
     public GameState defaultState = GameState.TicTacToe;
 
-    public GameObject tttCam;
-    public GameObject spaceCam1;
-    public GameObject spaceCam2;
+    public GameObject tttObjects;
+    public GameObject swObjects;
 
     private TTTGameManager ttt;
     private SWGameManager sw;
@@ -128,18 +127,15 @@ public class InputManager : MonoBehaviour
     private void SwitchToTTT()
     {
         currentState = GameState.TicTacToe;
-        spaceCam1.SetActive(false);
-        spaceCam2.SetActive(false);
-        tttCam.SetActive(true);
+        tttObjects.SetActive(true);
+        swObjects.SetActive(false);
     }
 
     private void SwitchToSW()
     {
         currentState = GameState.Spacewar;
-        spaceCam1.SetActive(true);
-        spaceCam2.SetActive(true);
-        tttCam.SetActive(false);
-        sw.InitSW();
+        tttObjects.SetActive(false);
+        swObjects.SetActive(true);
     }
 
     private void SwitchToIdle()
