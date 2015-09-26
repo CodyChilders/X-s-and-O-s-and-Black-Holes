@@ -7,14 +7,19 @@ public class InputManager : MonoBehaviour
     private GameState currentState;
     public GameState defaultState = GameState.TicTacToe;
 
+    public GameObject tttCam;
+    public GameObject spaceCam1;
+    public GameObject spaceCam2;
+
     private TTTGameManager ttt;
     private SWGameManager sw;
     private BoardContainer parentBoard;
 
     //this will be assigned somewhere in the tic tac toe code whenever there is a tie to break
     //it will be resolved and reset in the space war code once the tie has been broken
-    private Board contestedBoard; 
+    private Board contestedBoard;
 
+    #region unity functions
     void Start()
     {
         SetCurrentState(defaultState);
@@ -42,12 +47,16 @@ public class InputManager : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region state setting
     private void SetCurrentState(GameState state)
     {
         SwitchToState(defaultState);
     }
+    #endregion
 
+    #region Tic Tac Toe functions
     private void TTTUpdate()
     {
         if (ttt)
@@ -65,7 +74,9 @@ public class InputManager : MonoBehaviour
         else
             Debug.LogError("Unable to locate the parent game board to check for wins");
     }
+    #endregion
 
+    #region Space War functions
     private void SWUpdate()
     {
         if (sw)
@@ -73,6 +84,7 @@ public class InputManager : MonoBehaviour
         else
             Debug.LogErrorFormat("SWGameManager component missing from {0}", this.gameObject.name);
     }
+    #endregion
 
     #region state management
     public void SetContestedBoard(Board b)
@@ -116,11 +128,17 @@ public class InputManager : MonoBehaviour
     private void SwitchToTTT()
     {
         currentState = GameState.TicTacToe;
+        spaceCam1.SetActive(false);
+        spaceCam2.SetActive(false);
+        tttCam.SetActive(true);
     }
 
     private void SwitchToSW()
     {
         currentState = GameState.Spacewar;
+        spaceCam1.SetActive(true);
+        spaceCam2.SetActive(true);
+        tttCam.SetActive(false);
         sw.InitSW();
     }
 
