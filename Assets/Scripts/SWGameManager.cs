@@ -9,11 +9,6 @@ public class SWGameManager : MonoBehaviour
     public GameObject p1ShipStartPosition;
     public GameObject p2ShipStartPosition;
 
-    void Start()
-    {
-
-    }
-
     public void UpdateSW()
     {
         print("SWGameManager.UpdateSW called");

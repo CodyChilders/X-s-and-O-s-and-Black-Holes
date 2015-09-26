@@ -22,10 +22,10 @@ public class InputManager : MonoBehaviour
     #region unity functions
     void Start()
     {
-        SetCurrentState(defaultState);
         ttt = GetComponent<TTTGameManager>();
         sw = GetComponent<SWGameManager>();
         parentBoard = GetComponent<BuildTicTacToeBoard>().parentBoard;
+        SetCurrentState(defaultState);
     }
 
     void Update()
