@@ -48,13 +48,6 @@ public class InputManager : MonoBehaviour
     }
     #endregion
 
-    #region state setting
-    private void SetCurrentState(GameState state)
-    {
-        SwitchToState(defaultState);
-    }
-    #endregion
-
     #region Tic Tac Toe functions
     private void TTTUpdate()
     {
@@ -99,6 +92,11 @@ public class InputManager : MonoBehaviour
     }
 
     #region state switching
+    private void SetCurrentState(GameState state)
+    {
+        SwitchToState(state);
+    }
+
     private void SwitchToState(GameState state)
     {
         switch (state)
@@ -136,6 +134,7 @@ public class InputManager : MonoBehaviour
         currentState = GameState.Spacewar;
         tttObjects.SetActive(false);
         swObjects.SetActive(true);
+        sw.InitSW();
     }
 
     private void SwitchToIdle()
