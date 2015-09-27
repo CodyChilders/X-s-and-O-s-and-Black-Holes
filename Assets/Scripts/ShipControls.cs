@@ -77,7 +77,7 @@ public class ShipControls : MonoBehaviour
     private void FireEngine()
     {
         Vector3 move = Vector3.forward * moveSpeed;
-        this.transform.Translate(move, Space.Self);
+        this.transform.Translate(move);
     }
 
     private void FireWeapon()
@@ -86,6 +86,7 @@ public class ShipControls : MonoBehaviour
         GameObject newProjectile = Instantiate(projectilePrefab, newPosition, Quaternion.identity) as GameObject;
         Vector3 newDirection = this.transform.TransformVector(Vector3.forward);
         newProjectile.GetComponent<ProjectileBehavior>().Init(otherShip, blackHole, newDirection);
+        newProjectile.transform.parent = projectileContainer.transform;
     }
 
     private void PitchMove(Pitch p)

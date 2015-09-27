@@ -92,11 +92,33 @@ public class InputManager : MonoBehaviour
         SwitchToState(GameState.Spacewar);
     }
 
+    public void ResolveContestedBoard(GameObject winner)
+    {
+        Board.CellStates win;
+        string name = winner.gameObject.name;
+        if (name.Contains("1"))
+        {
+            win = Board.CellStates.P1;
+        }
+        else
+        {
+            win = Board.CellStates.P2;
+        }
+        ResolveContestedBoard(win);
+    }
+
     public void ResolveContestedBoard(Board.CellStates tieBreaker)
     {
-        contestedBoard.Winner = tieBreaker;
-        contestedBoard = null;
-        SwitchToState(GameState.TicTacToe);
+        if (contestedBoard != null)
+        {
+            contestedBoard.Winner = tieBreaker;
+            contestedBoard = null;
+            SwitchToState(GameState.TicTacToe);
+        }
+        else
+        {
+            Debug.LogWarning("Contested board set to null. If this isn't because it is in debug mode and didn't start in TTT mode, this is a problem");
+        }
     }
 
     #region state switching
