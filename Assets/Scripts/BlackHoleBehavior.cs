@@ -5,6 +5,7 @@ public class BlackHoleBehavior : MonoBehaviour
 {
     public GameObject p1Ship;
     public GameObject p2Ship;
+    public GameObject projectileContainer;
 
     public float eventHorizon = 55f;
 
@@ -31,6 +32,7 @@ public class BlackHoleBehavior : MonoBehaviour
             im.ResolveContestedBoard(Board.CellStates.P2);
             return;
         }
+        EatProjectiles();
     }
 
     private bool CheckForKill(GameObject ship)
@@ -38,5 +40,21 @@ public class BlackHoleBehavior : MonoBehaviour
         Vector3 thatPosition = ship.transform.position;
         float distance = Vector3.Distance(thisPosition, thatPosition);
         return distance <= eventHorizon;
+    }
+
+    //check every projectile, destroy the ones that fell in
+    private void EatProjectiles()
+    {
+        GameObject[] allProjectiles = GetAllChildGameObjects.GetAllChildren(projectileContainer);
+        for (int i = 0; i < allProjectiles.Length; i++)
+        {
+            GameObject currentProjectile = allProjectiles[i];
+            Vector3 projectilePosition = currentProjectile.transform.position;
+            float distance = Vector3.Distance(thisPosition, projectilePosition);
+            if (distance < eventHorizon)
+            {
+                Destroy(currentProjectile);
+            }
+        }
     }
 }
