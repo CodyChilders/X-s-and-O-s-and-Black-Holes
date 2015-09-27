@@ -24,7 +24,14 @@ public class InputManager : MonoBehaviour
         ttt = GetComponent<TTTGameManager>();
         sw = GetComponent<SWGameManager>();
         parentBoard = GetComponent<BuildTicTacToeBoard>().parentBoard;
-        SetCurrentState(defaultState);
+        if (Debug.isDebugBuild)
+        {
+            SetCurrentState(defaultState); //for quick and easy testing
+        }
+        else
+        {
+            SetCurrentState(GameState.TicTacToe); //so I don't have to remember to set this flag later
+        }
     }
 
     void Update()
@@ -88,6 +95,7 @@ public class InputManager : MonoBehaviour
     public void ResolveContestedBoard(Board.CellStates tieBreaker)
     {
         contestedBoard.Winner = tieBreaker;
+        contestedBoard = null;
         SwitchToState(GameState.TicTacToe);
     }
 

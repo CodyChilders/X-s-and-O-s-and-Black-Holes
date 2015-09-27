@@ -6,6 +6,7 @@ public class ShipControls : MonoBehaviour
     public GameObject projectileContainer;
     public GameObject projectilePrefab;
     public GameObject otherShip;
+    public GameObject blackHole;
 
     private float pitchSpeed = 0.5f;
     private float yawSpeed = 0.5f;
@@ -76,12 +77,15 @@ public class ShipControls : MonoBehaviour
     private void FireEngine()
     {
         Vector3 move = Vector3.forward * moveSpeed;
-        this.transform.Translate(move);
+        this.transform.Translate(move, Space.Self);
     }
 
     private void FireWeapon()
     {
-        
+        Vector3 newPosition = this.transform.position;
+        GameObject newProjectile = Instantiate(projectilePrefab, newPosition, Quaternion.identity) as GameObject;
+        Vector3 newDirection = this.transform.TransformVector(Vector3.forward);
+        newProjectile.GetComponent<ProjectileBehavior>().Init(otherShip, blackHole, newDirection);
     }
 
     private void PitchMove(Pitch p)
