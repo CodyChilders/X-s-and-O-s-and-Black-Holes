@@ -144,17 +144,12 @@ public class ShipControls : MonoBehaviour
             engineOnThisFrame = false;
         }
         //update if the black hole isn't turned off for debugging
-        Vector3 blackHolePull;
-        if(ignoreBlackHolePull && Debug.isDebugBuild)
+        if( ! (ignoreBlackHolePull && Debug.isDebugBuild) )
         {
-            blackHolePull = Vector3.zero;
-        }
-        else
-        {
-            blackHolePull = GetBHPull();
+            Vector3 blackHolePull = GetBHPull();
+            velocity += blackHolePull;
         }
         //calculate and move
-        velocity += blackHolePull;
         velocity.Normalize();
         velocity *= maxSpeed;
         this.transform.Translate(velocity, Space.World);
