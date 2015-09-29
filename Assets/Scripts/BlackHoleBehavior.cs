@@ -1,4 +1,12 @@
-﻿using UnityEngine;
+﻿/******************************************
+ * This is just code for killing players/ *
+ * projectiles.  If you are looking for   *
+ * how the black hole affects movement of *
+ * projectiles or ships, check their      *
+ * respective behavior scripts.           *
+ *****************************************/
+
+using UnityEngine;
 using System.Collections;
 
 public class BlackHoleBehavior : MonoBehaviour

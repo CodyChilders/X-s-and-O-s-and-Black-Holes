@@ -136,23 +136,35 @@ public class ShipControls : MonoBehaviour
 
     private void UpdateVelocityAndMove()
     {
+        int velocityChanges = 0;
         //Update if the engine was fired this frame
         if (engineOnThisFrame)
         {
             Vector3 move = this.transform.TransformDirection(Vector3.forward) * moveSpeed;
             velocity += move;
             engineOnThisFrame = false;
+            velocityChanges++;
         }
         //update if the black hole isn't turned off for debugging
         if( ! (ignoreBlackHolePull && Debug.isDebugBuild) )
         {
             Vector3 blackHolePull = GetBHPull();
             velocity += blackHolePull;
+            velocityChanges++;
         }
         //calculate and move
-        velocity.Normalize();
-        velocity *= maxSpeed;
-        this.transform.Translate(velocity, Space.World);
+        if (velocityChanges > 0)
+        {
+            velocity.Normalize();
+            velocity *= maxSpeed;
+            this.transform.Translate(velocity, Space.World);
+        }
+        else
+        {
+            //no changes were made, so dampen the velocity so they don't fly off into infinity, 
+            //also force them to move because this will lead back to the black hole
+            velocity *= 0.95f;
+        }
     }
 
     private Vector3 GetBHPull()

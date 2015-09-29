@@ -13,6 +13,9 @@ public class ProjectileBehavior : MonoBehaviour
     public enum WeaponPower { zero, over9000 };
     public WeaponPower damage = WeaponPower.over9000;
 
+    public GameObject tailParticleEffect;
+    public GameObject deathParticleEffect;
+
     private GameObject target;
     private GameObject blackHole;
     private Vector3 velocity;
@@ -58,9 +61,18 @@ public class ProjectileBehavior : MonoBehaviour
     //This method gets invoked when its lifetime is up
     private void DestroyThis() 
     {
+        ParticleSystem trail = tailParticleEffect.GetComponent<ParticleSystem>();
+        trail.enableEmission = false;
+        ParticleSystem death = deathParticleEffect.GetComponent<ParticleSystem>();
+        float deathDelay = death.duration;
+        deathParticleEffect.SetActive(true);
+        Invoke("ActuallyDestroyThis", deathDelay);
+    }
+
+    //This one gets invoked when the particle effects are done and it is time to clean up this memory
+    private void ActuallyDestroyThis()
+    {
         Destroy(this.gameObject);
-        //TODO: set off particle effects to indicate death
-        //requires increasing the time to death slightly
     }
 
     private void CheckForKill()

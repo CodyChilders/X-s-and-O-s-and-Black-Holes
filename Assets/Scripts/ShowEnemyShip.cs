@@ -23,6 +23,8 @@ public class ShowEnemyShip : MonoBehaviour
     private GUIStyle gs = new GUIStyle();
     private GUIStyle textStyle = new GUIStyle();
 
+    private StringBuilder builder = new StringBuilder();
+
     void Start()
     {
         c = cam.GetComponent<Camera>();
@@ -45,12 +47,12 @@ public class ShowEnemyShip : MonoBehaviour
         GUI.Box(new Rect(displayPoint.x, displayPoint.y, imageWidth, imageHeight), 
                 bullseye,
                 gs);
-        StringBuilder sb = new StringBuilder();
-        sb.Append("Target: ");
-        sb.Append(GetDistance());
-        sb.Append(" meters");
+        builder.Length = 0;
+        builder.Append("Target: ");
+        builder.Append(GetDistance());
+        builder.Append(" meters");
         GUI.Label(new Rect(displayPoint.x, displayPoint.y + imageHeight, 1000, 1000),
-                  sb.ToString(),
+                  builder.ToString(),
                   textStyle);
     }
 
