@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ShipControls : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class ShipControls : MonoBehaviour
     public float blackHolePullStrength = 1f;
 
     public float maxSpeed = 2f;
+
+    public int maxNumberOfProjectiles = 10;
+    private LinkedList<GameObject> firedProjectiles;
 
     public bool ignoreBlackHolePull = false;
 
@@ -32,6 +36,7 @@ public class ShipControls : MonoBehaviour
     void Start()
     {
         AssignPlayerNumber();
+        firedProjectiles = new LinkedList<GameObject>();
     }
 
     // Update is called once per frame
@@ -91,11 +96,31 @@ public class ShipControls : MonoBehaviour
 
     private void FireWeapon()
     {
+        UpdateProjectileList();
+        if (firedProjectiles.Count > maxNumberOfProjectiles)
+        {
+            //TODO: play sound to indicate that weapon failed to fire
+            return; //there are too many projectiles out, don't fire
+        }
         Vector3 newPosition = this.transform.position;
         GameObject newProjectile = Instantiate(projectilePrefab, newPosition, Quaternion.identity) as GameObject;
         Vector3 newDirection = this.transform.TransformVector(Vector3.forward);
         newProjectile.GetComponent<ProjectileBehavior>().Init(otherShip, blackHole, newDirection);
         newProjectile.transform.parent = projectileContainer.transform;
+        firedProjectiles.AddLast(newProjectile);
+    }
+
+    private void UpdateProjectileList()
+    {
+        //since they are created (then destroyed) in order, only check the first element
+        LinkedListNode<GameObject> first = firedProjectiles.First;
+        if (first == null)
+            return; //the list is empty, this is totally fine
+        GameObject firstGO = first.Value;
+        if (firstGO == null)
+        {
+            firedProjectiles.RemoveFirst();
+        }
     }
 
     private void PitchMove(Pitch p)
@@ -163,7 +188,7 @@ public class ShipControls : MonoBehaviour
         {
             //no changes were made, so dampen the velocity so they don't fly off into infinity, 
             //also force them to move because this will lead back to the black hole
-            velocity *= 0.95f;
+            velocity *= 0.99f; //0.99 because at 60ish fps, that adds up faster than you'd think
         }
     }
 

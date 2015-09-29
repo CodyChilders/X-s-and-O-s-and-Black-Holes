@@ -20,6 +20,8 @@ public class ProjectileBehavior : MonoBehaviour
     private GameObject blackHole;
     private Vector3 velocity;
 
+    bool alive = true; //this gets turned to false once the object is technically dead, but alive so the animations can finish
+
     private InputManager im;
 
     public void Init(GameObject t, GameObject bh, Vector3 forward)
@@ -36,12 +38,15 @@ public class ProjectileBehavior : MonoBehaviour
     void Update()
     {
         UpdateVelocity();
-        this.transform.Translate(velocity);
+        if(alive)
+            this.transform.Translate(velocity);
         CheckForKill();
     }
 
     private void UpdateVelocity()
     {
+        if (!alive)
+            return;
         Vector3 normalizedVectorToBH = GetDirection(this.transform.position, blackHole.transform.position);
         Vector3 normalizedVectorToTarget = GetDirection(this.transform.position, target.transform.position);
         Vector3 bhPull = normalizedVectorToBH * blackHoleGravity;
@@ -69,6 +74,7 @@ public class ProjectileBehavior : MonoBehaviour
         deathDelay *= 5f; //Make it longer so fade effects have a chance to finish, instead of abruptly vanishing
         deathParticleEffect.SetActive(true);
         Invoke("ActuallyDestroyThis", deathDelay);
+        alive = false;
     }
 
     //This one gets invoked when the particle effects are done and it is time to clean up this memory
@@ -79,7 +85,7 @@ public class ProjectileBehavior : MonoBehaviour
 
     private void CheckForKill()
     {
-        if (damage == WeaponPower.zero && Debug.isDebugBuild)
+        if (damage == WeaponPower.zero && Debug.isDebugBuild || !alive)
             return;
         Vector3 here = this.transform.position;
         Vector3 there = target.transform.position;
