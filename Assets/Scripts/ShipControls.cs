@@ -8,12 +8,21 @@ public class ShipControls : MonoBehaviour
     public GameObject otherShip;
     public GameObject blackHole;
 
+    public float blackHolePullStrength = 1f;
+
+    public float maxSpeed = 2f;
+
+    public bool ignoreBlackHolePull = false;
+
     private float pitchSpeed = 0.5f;
     private float yawSpeed = 0.5f;
     private float rollSpeed = 0.5f;
     private float moveSpeed = 2f;
 
     private int playerNumber;
+    private Vector3 velocity;
+
+    private bool engineOnThisFrame = false;
 
     private enum Pitch { Up, Down };
     private enum Yaw { Left, Right };
@@ -59,6 +68,7 @@ public class ShipControls : MonoBehaviour
         {
             //TODO: controller controls
         }
+        UpdateVelocityAndMove();
     }
 
     private void AssignPlayerNumber()
@@ -76,8 +86,7 @@ public class ShipControls : MonoBehaviour
 
     private void FireEngine()
     {
-        Vector3 move = Vector3.forward * moveSpeed;
-        this.transform.Translate(move);
+        engineOnThisFrame = true;
     }
 
     private void FireWeapon()
@@ -123,5 +132,41 @@ public class ShipControls : MonoBehaviour
         {
             this.transform.Rotate(Vector3.forward, rollSpeed);
         }
+    }
+
+    private void UpdateVelocityAndMove()
+    {
+        //Update if the engine was fired this frame
+        if (engineOnThisFrame)
+        {
+            Vector3 move = this.transform.TransformDirection(Vector3.forward) * moveSpeed;
+            velocity += move;
+            engineOnThisFrame = false;
+        }
+        //update if the black hole isn't turned off for debugging
+        Vector3 blackHolePull;
+        if(ignoreBlackHolePull && Debug.isDebugBuild)
+        {
+            blackHolePull = Vector3.zero;
+        }
+        else
+        {
+            blackHolePull = GetBHPull();
+        }
+        //calculate and move
+        velocity += blackHolePull;
+        velocity.Normalize();
+        velocity *= maxSpeed;
+        this.transform.Translate(velocity, Space.World);
+    }
+
+    private Vector3 GetBHPull()
+    {
+        Vector3 here = this.transform.position;
+        Vector3 there = blackHole.transform.position;
+        Vector3 delta = there - here;
+        delta.Normalize();
+        delta *= blackHolePullStrength;
+        return delta;
     }
 }
