@@ -63,8 +63,10 @@ public class ProjectileBehavior : MonoBehaviour
     {
         ParticleSystem trail = tailParticleEffect.GetComponent<ParticleSystem>();
         trail.enableEmission = false;
+        trail.Clear();
         ParticleSystem death = deathParticleEffect.GetComponent<ParticleSystem>();
         float deathDelay = death.duration;
+        deathDelay *= 5f; //Make it longer so fade effects have a chance to finish, instead of abruptly vanishing
         deathParticleEffect.SetActive(true);
         Invoke("ActuallyDestroyThis", deathDelay);
     }
