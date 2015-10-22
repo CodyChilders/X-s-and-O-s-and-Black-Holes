@@ -39,7 +39,7 @@ public class ShowEnemyShip : MonoBehaviour
         displayPoint.x -= imageWidth  / 2f;
         displayPoint.y -= imageHeight / 2f;
         //it might be on the screen, but on the other player's side.  skip the rest of the method if so
-        if (ShouldSkipDrawingHud(displayPoint))
+        if (ShouldSkipDrawingHud(screenPoint, displayPoint))
         {
             return;
         }
@@ -56,7 +56,12 @@ public class ShowEnemyShip : MonoBehaviour
                   textStyle);
     }
 
-    private bool ShouldSkipDrawingHud(Vector2 displayPoint)
+    private bool ShouldSkipDrawingHud(Vector3 screenPoint, Vector2 displayPoint)
+    {
+        return IsHudOnWrongPlayersSide(displayPoint) || IsPointInWrongDirection(screenPoint);
+    }
+
+    private bool IsHudOnWrongPlayersSide(Vector2 displayPoint)
     {
         float xCoordinate = displayPoint.x + imageWidth / 2;
         if (playerNumber == 1)
@@ -64,7 +69,7 @@ public class ShowEnemyShip : MonoBehaviour
             if (xCoordinate > Screen.width / 2)
                 return true;
         }
-        else if(playerNumber == 2)
+        else if (playerNumber == 2)
         {
             if (xCoordinate < Screen.width / 2)
                 return true;
@@ -74,6 +79,20 @@ public class ShowEnemyShip : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private bool IsPointInWrongDirection(Vector3 screenPoint)
+    {
+        Vector3 heading = otherShip.transform.position - cam.transform.position;
+        if (Vector3.Dot(cam.transform.forward, heading) > 0) 
+        {
+            // Object is in front.
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     private string GetDistance()

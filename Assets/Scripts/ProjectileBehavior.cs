@@ -38,9 +38,14 @@ public class ProjectileBehavior : MonoBehaviour
     void Update()
     {
         UpdateVelocity();
-        if(alive)
-            this.transform.Translate(velocity);
+        MoveShip();
         CheckForKill();
+    }
+
+    private void MoveShip()
+    {
+        if (alive)
+            this.transform.Translate(velocity);
     }
 
     private void UpdateVelocity()
