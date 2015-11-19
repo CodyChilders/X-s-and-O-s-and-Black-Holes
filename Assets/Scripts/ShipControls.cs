@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 public class ShipControls : MonoBehaviour
 {
@@ -28,20 +29,27 @@ public class ShipControls : MonoBehaviour
 
     private bool engineOnThisFrame = false;
 
-    private enum Pitch { Up, Down };
-    private enum Yaw { Left, Right };
-    private enum Roll { Left, Right };
+    public float weaponCooldownSeconds = 0.5f;
+    private bool weaponCooldownElapsed = true;
+
+    private string horizontalKey;
+    private string verticalKey;
+    private string primaryKey;
+    private string secondaryKey;
 
     // Use this for initialization
     void Start()
     {
         AssignPlayerNumber();
         firedProjectiles = new LinkedList<GameObject>();
+        SetKeys();
     }
 
     // Update is called once per frame
     void Update()
     {
+        #region debug keyboard controls
+        /*
         if (Debug.isDebugBuild) //debug keyboard controls to be taken out later
         {
             if (Input.GetKeyDown(KeyCode.P)) //primary action
@@ -69,12 +77,51 @@ public class ShipControls : MonoBehaviour
                 YawMove(Yaw.Right);
             }
         }
-        else
-        {
-            //TODO: controller controls
-        }
+        */
+        #endregion
+        #region resolving button presses
+        float horizontalAxis = Input.GetAxis(horizontalKey);
+        YawMove(horizontalAxis);
+        float verticalAxis = Input.GetAxis(verticalKey);
+        PitchMove(verticalAxis);
+        bool firedWeapon = Input.GetButtonDown(primaryKey);
+        float firedEngine = Input.GetAxis(secondaryKey);
+        if (firedEngine == 1f)
+            FireEngine();
         UpdateVelocityAndMove();
+        if (firedWeapon)
+            FireWeapon();
+        #endregion
     }
+
+    #region Button testing code
+    /*
+    void OnGUI()
+    {
+        if (playerNumber == 2)
+            return;
+        const float width = 500f;
+        const float height = 100f;
+        float posX = Screen.width / 2f - width / 2f;
+        float posY = Screen.height / 2f - height / 2f;
+        Rect screen = new Rect(posX, posY, width, height);
+        string text;
+        try
+        {
+            bool a = Input.GetButton("P1_Primary");
+            float b = Input.GetAxis("P1_Secondary");
+            float c = Input.GetAxis("P1_Horizontal");
+            float d = Input.GetAxis("P1_Vertical");
+            text = string.Format("Prim:\t{0}\nScnd:\t{1}\nHorz:\t{2}\nVert:\t{3}", a, b, c, d);
+        }
+        catch (System.Exception e)
+        {
+            text = e.ToString();
+        }
+        GUI.Box(screen, text);
+    }
+     * */
+    #endregion
 
     private void AssignPlayerNumber()
     {
@@ -89,6 +136,15 @@ public class ShipControls : MonoBehaviour
         }
     }
 
+    private void SetKeys()
+    {
+        string prefix = "P" + playerNumber + "_";
+        horizontalKey = prefix + "Horizontal";
+        verticalKey = prefix + "Vertical";
+        primaryKey = prefix + "Primary";
+        secondaryKey = prefix + "Secondary";
+    }
+
     private void FireEngine()
     {
         engineOnThisFrame = true;
@@ -96,6 +152,8 @@ public class ShipControls : MonoBehaviour
 
     private void FireWeapon()
     {
+        if (!weaponCooldownElapsed)
+            return;
         UpdateProjectileList();
         if (firedProjectiles.Count > maxNumberOfProjectiles)
         {
@@ -108,6 +166,13 @@ public class ShipControls : MonoBehaviour
         newProjectile.GetComponent<ProjectileBehavior>().Init(otherShip, blackHole, newDirection);
         newProjectile.transform.parent = projectileContainer.transform;
         firedProjectiles.AddLast(newProjectile);
+        Invoke("ResetWeaponCooldownFlag", weaponCooldownSeconds);
+    }
+
+    //This method is invoked on a timer based on the weapon cooldown.  It just trips the flag to allow the gun to fire again
+    private void ResetWeaponCooldownFlag()
+    {
+        weaponCooldownElapsed = true;
     }
 
     private void UpdateProjectileList()
@@ -117,46 +182,25 @@ public class ShipControls : MonoBehaviour
         if (first == null)
             return; //the list is empty, this is totally fine
         GameObject firstGO = first.Value;
-        if (firstGO == null)
+        if (firstGO == null) //Set to null when Unity cleans up the memory with Destroy()
         {
             firedProjectiles.RemoveFirst();
         }
     }
 
-    private void PitchMove(Pitch p)
+    private void PitchMove(float intensity)
     {
-        if (p == Pitch.Down)
-        {
-            this.transform.Rotate(Vector3.right, pitchSpeed);
-        }
-        else
-        {
-            this.transform.Rotate(Vector3.right, -pitchSpeed);
-        }
+        this.transform.Rotate(Vector3.right, intensity * pitchSpeed * -1);
     }
 
-    private void YawMove(Yaw y)
+    private void YawMove(float intensity)
     {
-        if (y == Yaw.Left)
-        {
-            this.transform.Rotate(Vector3.up, -yawSpeed);
-        }
-        else
-        {
-            this.transform.Rotate(Vector3.up, yawSpeed);
-        }
+        this.transform.Rotate(Vector3.up, intensity * yawSpeed);
     }
 
-    private void RollMove(Roll r)
+    private void RollMove(float intensity)
     {
-        if (r == Roll.Right)
-        {
-            this.transform.Rotate(Vector3.forward, -rollSpeed);
-        }
-        else
-        {
-            this.transform.Rotate(Vector3.forward, rollSpeed);
-        }
+        this.transform.Rotate(Vector3.forward, intensity * rollSpeed);
     }
 
     private void UpdateVelocityAndMove()

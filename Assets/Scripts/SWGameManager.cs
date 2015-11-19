@@ -18,7 +18,7 @@ public class SWGameManager : MonoBehaviour
 
     public void UpdateSW()
     {
-        print("SWGameManager.UpdateSW called");
+        
     }
 
     //Use this method to reset score counters, etc

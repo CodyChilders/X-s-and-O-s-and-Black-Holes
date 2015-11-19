@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+#if UNITY_EDITOR
 using UnityEditor;
 
 [CustomEditor(typeof(SlashSlash))]
@@ -18,3 +19,4 @@ public class SlashSlashEditor : Editor
         //EditorGUILayout.LabelField("Level", myTarget.Level.ToString());
     }
 }
+#endif
