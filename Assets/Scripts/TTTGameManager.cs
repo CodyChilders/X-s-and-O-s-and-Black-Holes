@@ -37,68 +37,75 @@ public class TTTGameManager : MonoBehaviour
         Vector2 delta = new Vector2();
         delta.x = Input.GetAxis(playerPrefix + "Horizontal");
         delta.y = Input.GetAxis(playerPrefix + "Vertical");
-        if (delta.x > delta.y && !Debug.isDebugBuild)
+        if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
         {
-            if (Input.GetButtonDown(playerPrefix + "Horizontal"))
+            int c = 0;
+            if (delta.x > 0.5f)
+                c = 1;
+            else if (delta.x < -0.5f)
+                c = -1;
+            currentCursor.transform.Translate(Vector3.right * c);
+            if (currentCursor.transform.position.x < 0 || currentCursor.transform.position.x > 26) //it is off the board, undo
+            {
+                currentCursor.transform.Translate(Vector3.right * -c);
+            }
+        }
+        else if (Mathf.Abs(delta.x) <= Mathf.Abs(delta.y))
+        {
+            int c = 0;
+            if (delta.y > 0.5f)
+                c = -1;
+            else if (delta.y < -0.5f)
+                c = 1;
+            currentCursor.transform.Translate(Vector3.forward * c);
+            if (currentCursor.transform.position.z < 0 || currentCursor.transform.position.z > 26) //it is off the board, undo
+            {
+                currentCursor.transform.Translate(Vector3.forward * -c);
+            }
+        }
+        #region debug keyboard controls
+        /*
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            currentCursor.transform.Translate(Vector3.left);
+            if (currentCursor.transform.position.x < 0) //it is off the board, undo
             {
                 currentCursor.transform.Translate(Vector3.right);
             }
         }
-        else if (delta.x <= delta.y && !Debug.isDebugBuild)
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if (Input.GetButtonDown(playerPrefix + "Vertical"))
-            {
-                currentCursor.transform.Translate(Vector3.up);
-            }
-        }
-        else if (Debug.isDebugBuild)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            currentCursor.transform.Translate(Vector3.right);
+            if (currentCursor.transform.position.x > 26) //it is off the board, undo
             {
                 currentCursor.transform.Translate(Vector3.left);
-                if (currentCursor.transform.position.x < 0) //it is off the board, undo
-                {
-                    currentCursor.transform.Translate(Vector3.right);
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                currentCursor.transform.Translate(Vector3.right);
-                if(currentCursor.transform.position.x > 26) //it is off the board, undo
-                {
-                    currentCursor.transform.Translate(Vector3.left);
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                currentCursor.transform.Translate(Vector3.forward);
-                if (currentCursor.transform.position.z > 26) //it is off the board, undo
-                {
-                    currentCursor.transform.Translate(Vector3.back);
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                currentCursor.transform.Translate(Vector3.back);
-                if (currentCursor.transform.position.z < 0) //it is off the board, undo
-                {
-                    currentCursor.transform.Translate(Vector3.forward);
-                }
             }
         }
-        
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            currentCursor.transform.Translate(Vector3.forward);
+            if (currentCursor.transform.position.z > 26) //it is off the board, undo
+            {
+                currentCursor.transform.Translate(Vector3.back);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            currentCursor.transform.Translate(Vector3.back);
+            if (currentCursor.transform.position.z < 0) //it is off the board, undo
+            {
+                currentCursor.transform.Translate(Vector3.forward);
+            }
+        }
+         * */
+        #endregion
         //Handle actions
-        if (Input.GetButtonDown(playerPrefix + "Primary") || (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.P)))
+        if (Input.GetButtonDown(playerPrefix + "Primary"))
         {
             bool successful = ActivateCell();
             if (successful)
                 SwitchPlayers();
         }
-        if (Input.GetButtonDown(playerPrefix + "Secondary") || (Debug.isDebugBuild && Input.GetKeyDown(KeyCode.S)))
-        {
-            //not necessary in TTT, only SW
-        }
-
     }
 
     private void SwitchPlayers()
