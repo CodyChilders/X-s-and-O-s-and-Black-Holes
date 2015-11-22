@@ -14,6 +14,8 @@ public class InputManager : MonoBehaviour
     private SWGameManager sw;
     private BoardContainer parentBoard;
 
+    private AudioManager audio;
+
     //this will be assigned somewhere in the tic tac toe code whenever there is a tie to break
     //it will be resolved and reset in the space war code once the tie has been broken
     private Board contestedBoard;
@@ -24,6 +26,7 @@ public class InputManager : MonoBehaviour
         ttt = GetComponent<TTTGameManager>();
         sw = GetComponent<SWGameManager>();
         parentBoard = GetComponent<BuildTicTacToeBoard>().parentBoard;
+        audio = GetComponent<AudioManager>();
         if (Debug.isDebugBuild)
         {
             SetCurrentState(defaultState); //for quick and easy testing
@@ -158,6 +161,8 @@ public class InputManager : MonoBehaviour
         currentState = GameState.TicTacToe;
         tttObjects.SetActive(true);
         swObjects.SetActive(false);
+        audio.StartTTTMusic();
+        audio.SWTransitionToTTT();
     }
 
     private void SwitchToSW()
@@ -166,6 +171,8 @@ public class InputManager : MonoBehaviour
         tttObjects.SetActive(false);
         swObjects.SetActive(true);
         sw.InitSW();
+        audio.StartSWMusic();
+        audio.TTTTransitionToSW();
     }
 
     private void SwitchToIdle()

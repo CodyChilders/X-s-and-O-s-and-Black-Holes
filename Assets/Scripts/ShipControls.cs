@@ -5,12 +5,14 @@ using System.Text;
 
 public class ShipControls : MonoBehaviour
 {
+    public GameObject gameController;
     public GameObject projectileContainer;
     public GameObject projectilePrefab;
     public GameObject otherShip;
     public GameObject blackHole;
     public GameObject engineParticles;
     private ParticleSystem engine;
+    private AudioManager audio;
 
     public float blackHolePullStrength = 1f;
 
@@ -46,6 +48,7 @@ public class ShipControls : MonoBehaviour
         firedProjectiles = new LinkedList<GameObject>();
         SetKeys();
         engine = engineParticles.GetComponent<ParticleSystem>();
+        audio = gameController.GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
@@ -92,7 +95,9 @@ public class ShipControls : MonoBehaviour
         ProcessEngine(firedEngine);
         UpdateVelocityAndMove();
         if (firedWeapon)
+        {
             FireWeapon();
+        }
         #endregion
     }
 
@@ -169,19 +174,23 @@ public class ShipControls : MonoBehaviour
     private void FireWeapon()
     {
         if (!weaponCooldownElapsed)
+        {
+            audio.SWFailFireWeapon();
             return;
+        }
         UpdateProjectileList();
         if (firedProjectiles.Count > maxNumberOfProjectiles)
         {
-            //TODO: play sound to indicate that weapon failed to fire
+            audio.SWFailFireWeapon();
             return; //there are too many projectiles out, don't fire
         }
         Vector3 newPosition = this.transform.position;
         GameObject newProjectile = Instantiate(projectilePrefab, newPosition, Quaternion.identity) as GameObject;
         Vector3 newDirection = this.transform.TransformVector(Vector3.forward);
-        newProjectile.GetComponent<ProjectileBehavior>().Init(otherShip, blackHole, newDirection);
+        newProjectile.GetComponent<ProjectileBehavior>().Init(otherShip, blackHole, newDirection, audio);
         newProjectile.transform.parent = projectileContainer.transform;
         firedProjectiles.AddLast(newProjectile);
+        audio.SWFireWeapon();
         Invoke("ResetWeaponCooldownFlag", weaponCooldownSeconds);
     }
 

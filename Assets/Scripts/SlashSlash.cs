@@ -39,7 +39,6 @@ public class SlashSlash : MonoBehaviour
         //free up the memory if all checks pass
         if (deleteFlag)
         {
-            comment = "";
             Destroy(this);
         }
     }

@@ -20,16 +20,19 @@ public class ProjectileBehavior : MonoBehaviour
     private GameObject blackHole;
     private Vector3 velocity;
 
-    bool alive = true; //this gets turned to false once the object is technically dead, but alive so the animations can finish
+    private bool alive = true; //this gets turned to false once the object is technically dead, but alive so the animations can finish
+    private bool playedCloseToTargetAlarm = false;
 
     private InputManager im;
+    private AudioManager audio;
 
-    public void Init(GameObject t, GameObject bh, Vector3 forward)
+    public void Init(GameObject t, GameObject bh, Vector3 forward, AudioManager am)
     {
         //Don't hold an internal timer, let Unity handle it when the time has elapsed
         Invoke("DestroyThis", maxLifetime);
         target = t;
         blackHole = bh;
+        audio = am;
         forward.Normalize();
         velocity = forward * speed;
         im = GameObject.Find("Controller Scripts").GetComponent<InputManager>();
@@ -38,11 +41,11 @@ public class ProjectileBehavior : MonoBehaviour
     void Update()
     {
         UpdateVelocity();
-        MoveShip();
+        MoveThis();
         CheckForKill();
     }
 
-    private void MoveShip()
+    private void MoveThis()
     {
         if (alive)
             this.transform.Translate(velocity);
@@ -76,10 +79,11 @@ public class ProjectileBehavior : MonoBehaviour
         trail.Clear();
         ParticleSystem death = deathParticleEffect.GetComponent<ParticleSystem>();
         float deathDelay = death.duration;
-        deathDelay *= 5f; //Make it longer so fade effects have a chance to finish, instead of abruptly vanishing
+        deathDelay *= 3f; //Make it longer so fade effects have a chance to finish, instead of abruptly vanishing
         deathParticleEffect.SetActive(true);
         Invoke("ActuallyDestroyThis", deathDelay);
         alive = false;
+        audio.SWProjectileDenotateHarmlessly();
     }
 
     //This one gets invoked when the particle effects are done and it is time to clean up this memory
@@ -95,6 +99,11 @@ public class ProjectileBehavior : MonoBehaviour
         Vector3 here = this.transform.position;
         Vector3 there = target.transform.position;
         float distance = Vector3.Distance(here, there);
+        if (distance < distanceNeededForKill * 50 && !playedCloseToTargetAlarm)
+        {
+            playedCloseToTargetAlarm = true;
+            audio.SWIncomingProjectileAlarm();
+        }
         if (distance < distanceNeededForKill)
         {
             im.ResolveContestedBoard(target);

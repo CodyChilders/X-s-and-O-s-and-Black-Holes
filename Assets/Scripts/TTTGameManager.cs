@@ -11,9 +11,12 @@ public class TTTGameManager : MonoBehaviour
     public GameObject p1Cursor;
     public GameObject p2Cursor;
 
+    private AudioManager audio;
+
     void Start()
     {
         ConfigGame();
+        audio = GetComponent<AudioManager>();
     }
 
     private void ConfigGame()
@@ -48,6 +51,7 @@ public class TTTGameManager : MonoBehaviour
             if (currentCursor.transform.position.x < 0 || currentCursor.transform.position.x > 26) //it is off the board, undo
             {
                 currentCursor.transform.Translate(Vector3.right * -c);
+                audio.TTTEdgeBoundry();
             }
         }
         else if (Mathf.Abs(delta.x) <= Mathf.Abs(delta.y))
@@ -61,6 +65,7 @@ public class TTTGameManager : MonoBehaviour
             if (currentCursor.transform.position.z < 0 || currentCursor.transform.position.z > 26) //it is off the board, undo
             {
                 currentCursor.transform.Translate(Vector3.forward * -c);
+                audio.TTTEdgeBoundry();
             }
         }
         #region debug keyboard controls
@@ -104,7 +109,14 @@ public class TTTGameManager : MonoBehaviour
         {
             bool successful = ActivateCell();
             if (successful)
+            {
                 SwitchPlayers();
+                audio.TTTPlacePiece();
+            }
+            else
+            {
+                audio.TTTFailPlacePiece();
+            }
         }
     }
 
