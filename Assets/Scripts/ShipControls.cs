@@ -9,6 +9,8 @@ public class ShipControls : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject otherShip;
     public GameObject blackHole;
+    public GameObject engineParticles;
+    private ParticleSystem engine;
 
     public float blackHolePullStrength = 1f;
 
@@ -43,6 +45,7 @@ public class ShipControls : MonoBehaviour
         AssignPlayerNumber();
         firedProjectiles = new LinkedList<GameObject>();
         SetKeys();
+        engine = engineParticles.GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -86,8 +89,7 @@ public class ShipControls : MonoBehaviour
         PitchMove(verticalAxis);
         bool firedWeapon = Input.GetButtonDown(primaryKey);
         float firedEngine = Input.GetAxis(secondaryKey);
-        if (firedEngine == 1f)
-            FireEngine();
+        ProcessEngine(firedEngine);
         UpdateVelocityAndMove();
         if (firedWeapon)
             FireWeapon();
@@ -143,6 +145,20 @@ public class ShipControls : MonoBehaviour
         verticalKey = prefix + "Vertical";
         primaryKey = prefix + "Primary";
         secondaryKey = prefix + "Secondary";
+    }
+
+    private void ProcessEngine(float axis)
+    {
+        print("Throttle: " + axis);
+        if (axis == 1f)
+        {
+            FireEngine();
+            engine.Emit(1);
+        }
+        else
+        {
+            //
+        }
     }
 
     private void FireEngine()

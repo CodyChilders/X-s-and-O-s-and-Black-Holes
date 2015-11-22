@@ -10,9 +10,52 @@ public class AudioManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
+    public AudioClip tttMusic;
+    public void StartTTTMusic()
     {
 
     }
+
+    public AudioClip swMusic;
+    public void StartSWMusic()
+    {
+        
+    }
+
+    public AudioClip placePiece;
+    public void TTTPlacePiece() { }
+
+    public AudioClip failPlacePiece;
+    public void TTTFailPlacePiece() { }
+
+    public AudioClip moveCursor;
+    public void TTTMoveCursor() { }
+
+    public AudioClip transitionToSW;
+    public void TTTTransitionToSW() { }
+
+    public AudioClip completeMatch;
+    public void TTTCompleteMatch() { }
+
+    public AudioClip fireWeapon;
+    public void SWFireWeapon() { }
+
+    public AudioClip failFireWeapon;
+    public void SWFailFireWeapon() { }
+
+    public AudioClip transitionToTTT;
+    public void SWTransitionToTTT() { }
+
+    public AudioClip incomingProjectileAlarm;
+    public void SWIncomingProjectileAlarm() { }
+
+    public AudioClip projectileDetonateHarmlessly;
+    public void SWProjectileDenotateHarmlessly() { }
+
+    public AudioClip engineThrottleUp;
+    public void SWEngineThrottleUp() { }
+
+    public AudioClip engineThrottleDown;
+    public void SWEngineThrottleDown() { }
+
 }

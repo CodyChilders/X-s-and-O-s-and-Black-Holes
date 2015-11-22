@@ -66,12 +66,12 @@ public class ShowEnemyShip : MonoBehaviour
         float xCoordinate = displayPoint.x + imageWidth / 2;
         if (playerNumber == 1)
         {
-            if (xCoordinate > Screen.width / 2)
+            if (xCoordinate < Screen.width / 2)
                 return true;
         }
         else if (playerNumber == 2)
         {
-            if (xCoordinate < Screen.width / 2)
+            if (xCoordinate > Screen.width / 2)
                 return true;
         }
         else
