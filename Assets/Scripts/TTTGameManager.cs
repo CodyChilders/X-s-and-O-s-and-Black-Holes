@@ -11,7 +11,14 @@ public class TTTGameManager : MonoBehaviour
     public GameObject p1Cursor;
     public GameObject p2Cursor;
 
+    public float minTimeBetweenCursorMoves = 1f / 5f;
+    private bool okayToMoveCursor = true;
+
     private AudioManager audio;
+
+    private const float oneFrameSeconds = 1f / 60f;
+    private int framesJoystickHeldDownFor;
+    private int framesBeforeJoystickDelayUnlock = 50;
 
     void Start()
     {
@@ -26,6 +33,7 @@ public class TTTGameManager : MonoBehaviour
         p2Cursor.transform.position = cursorStartPosition;
         p2Cursor.gameObject.SetActive(false); //this gets toggled when the turns change
         turnCounter = 0;
+        framesJoystickHeldDownFor = 0;
         playerOnesTurn = true;
     }
 
@@ -40,33 +48,51 @@ public class TTTGameManager : MonoBehaviour
         Vector2 delta = new Vector2();
         delta.x = Input.GetAxis(playerPrefix + "Horizontal");
         delta.y = Input.GetAxis(playerPrefix + "Vertical");
+        bool joystickTiltedEnoughToMove = false;
+        bool disableJoystickSpeedup = false;
         if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
         {
-            int c = 0;
-            if (delta.x > 0.5f)
-                c = 1;
-            else if (delta.x < -0.5f)
-                c = -1;
-            currentCursor.transform.Translate(Vector3.right * c);
-            if (currentCursor.transform.position.x < 0 || currentCursor.transform.position.x > 26) //it is off the board, undo
+            joystickTiltedEnoughToMove = true;
+            if(okayToMoveCursor)
             {
-                currentCursor.transform.Translate(Vector3.right * -c);
-                audio.TTTEdgeBoundry();
+                int c = 0;
+                if (delta.x > 0.5f)
+                    c = 1;
+                else if (delta.x < -0.5f)
+                    c = -1;
+                currentCursor.transform.Translate(Vector3.right * c);
+                if (currentCursor.transform.position.x < 0 || currentCursor.transform.position.x > 26) //it is off the board, undo
+                {
+                    currentCursor.transform.Translate(Vector3.right * -c);
+                    audio.TTTEdgeBoundry();
+                }
+                disableJoystickSpeedup = ConfigureCursorForNextAction();
             }
+            
         }
         else if (Mathf.Abs(delta.x) <= Mathf.Abs(delta.y))
         {
-            int c = 0;
-            if (delta.y > 0.5f)
-                c = -1;
-            else if (delta.y < -0.5f)
-                c = 1;
-            currentCursor.transform.Translate(Vector3.forward * c);
-            if (currentCursor.transform.position.z < 0 || currentCursor.transform.position.z > 26) //it is off the board, undo
+            joystickTiltedEnoughToMove = true;
+            if (okayToMoveCursor)
             {
-                currentCursor.transform.Translate(Vector3.forward * -c);
-                audio.TTTEdgeBoundry();
+                int c = 0;
+                if (delta.y > 0.5f)
+                    c = -1;
+                else if (delta.y < -0.5f)
+                    c = 1;
+                currentCursor.transform.Translate(Vector3.forward * c);
+                if (currentCursor.transform.position.z < 0 || currentCursor.transform.position.z > 26) //it is off the board, undo
+                {
+                    currentCursor.transform.Translate(Vector3.forward * -c);
+                    audio.TTTEdgeBoundry();
+                }
+                disableJoystickSpeedup = ConfigureCursorForNextAction();
             }
+        }
+
+        if (disableJoystickSpeedup)
+        {
+            framesJoystickHeldDownFor = 0; //Reset this counter so the joystick won't run super fast starting for the next player
         }
         #region debug keyboard controls
         /*
@@ -120,7 +146,36 @@ public class TTTGameManager : MonoBehaviour
         }
     }
 
-    private void SwitchPlayers()
+    //This function returns false if the fast or slow cursor state should not be changed
+    //This function returns true if it should be changed
+    private bool ConfigureCursorForNextAction()
+    {
+        bool returnVal;
+        if (Input.GetKey(KeyCode.Space))
+            print("Break");
+        float resetTime;
+        okayToMoveCursor = false;
+        framesJoystickHeldDownFor++;
+        if (framesJoystickHeldDownFor >= framesBeforeJoystickDelayUnlock)
+        {
+            resetTime = oneFrameSeconds;
+            returnVal = false;
+        }
+        else
+        {
+            resetTime = minTimeBetweenCursorMoves;
+            returnVal = true;
+        }
+        Invoke("AllowCursorToMove", resetTime);
+        return returnVal;
+    }
+
+    private void AllowCursorToMove()
+    {
+        okayToMoveCursor = true;
+    }
+
+    public void SwitchPlayers()
     {
         if (playerOnesTurn)
         {

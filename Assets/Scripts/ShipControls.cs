@@ -91,7 +91,7 @@ public class ShipControls : MonoBehaviour
         float verticalAxis = Input.GetAxis(verticalKey);
         PitchMove(verticalAxis);
         bool firedWeapon = Input.GetButtonDown(primaryKey);
-        float firedEngine = Input.GetAxis(secondaryKey);
+        bool firedEngine = Input.GetButton(secondaryKey);
         ProcessEngine(firedEngine);
         UpdateVelocityAndMove();
         if (firedWeapon)
@@ -152,17 +152,12 @@ public class ShipControls : MonoBehaviour
         secondaryKey = prefix + "Secondary";
     }
 
-    private void ProcessEngine(float axis)
+    private void ProcessEngine(bool pressed)
     {
-        print("Throttle: " + axis);
-        if (axis == 1f)
+        if (pressed)
         {
             FireEngine();
-            engine.Emit(1);
-        }
-        else
-        {
-            //
+            engine.Emit(5); //Throw a few particles out to indicate that the engine is on
         }
     }
 

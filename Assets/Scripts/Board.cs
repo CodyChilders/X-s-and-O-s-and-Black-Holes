@@ -116,7 +116,6 @@ public class Board
         }
         if (winner == CellStates.Empty && ThisBoardIsFull())
         {
-            Debug.Log("Tie detected");
             GameObject.Find("Controller Scripts").GetComponent<InputManager>().SetContestedBoard(this);
         }
     }
