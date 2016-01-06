@@ -94,7 +94,7 @@ public class ProjectileBehavior : MonoBehaviour
 
     private void CheckForKill()
     {
-        if (damage == WeaponPower.zero && Debug.isDebugBuild || !alive)
+        if ( (damage == WeaponPower.zero && Debug.isDebugBuild) || !alive)
             return;
         Vector3 here = this.transform.position;
         Vector3 there = target.transform.position;

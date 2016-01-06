@@ -250,9 +250,11 @@ public class ShipControls : MonoBehaviour
         }
         else
         {
+            /*
             //no changes were made, so dampen the velocity so they don't fly off into infinity, 
             //also force them to move because this will lead back to the black hole
             velocity *= 0.99f; //0.99 because at 60ish fps, that adds up faster than you'd think
+             * */
         }
     }
 

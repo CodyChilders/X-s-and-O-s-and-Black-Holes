@@ -11,21 +11,46 @@ public class SWGameManager : MonoBehaviour
 
     private InputManager im;
 
+    private enum SWState { Tutorial, PausedIntro, Game };
+    private SWState currentState;
+
+    private bool shownTutorial;
+
     void Start()
     {
         im = GetComponent<InputManager>();
+        shownTutorial = false;
     }
 
     public void UpdateSW()
     {
-        
+        switch (currentState)
+        {
+            case SWState.Game:
+                //nothing needs to run every frame in this state
+                break;
+            case SWState.PausedIntro:
+                //resolve countdown timers while player gets ready
+                break;
+            case SWState.Tutorial:
+                //wait for player input so both know the instructions, then switch to paused intro
+                break;
+        }
     }
 
-    //Use this method to reset score counters, etc
-    //and set the ships to their starting position
+    //Use this method to reset score counters, game state, etc, and set the ships to their starting position
     public void InitSW()
     {
         SetShips();
+        if (shownTutorial)
+        {
+            currentState = SWState.PausedIntro;
+        }
+        else
+        {
+            currentState = SWState.Tutorial;
+            shownTutorial = true;
+        }
     }
 
     private void SetShips()

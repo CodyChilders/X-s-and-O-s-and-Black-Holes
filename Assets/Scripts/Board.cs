@@ -151,12 +151,13 @@ public class Board
     protected virtual bool CheckForMatch(CellStates player, params Vector2[] coordinates)
     {
         int matches = 0;
-        foreach(Vector2 v in coordinates)
+        for (int i = 0; i < coordinates.Length; i++ )
         {
+            Vector2 v = coordinates[i];
             //retrieve the correct cell
             GameObject currentCell = cells[(int)v.x, (int)v.y];
             CellStatus cellStatus = currentCell.GetComponent<CellStatus>();
-            if(cellStatus == null)
+            if (cellStatus == null)
             {
                 Debug.LogError("Cell missing its CellStatus component");
             }
@@ -164,8 +165,8 @@ public class Board
             CellStatus.Piece displayedValue = cellStatus.CurrentPiece;
             //compare to confirm match
             //p1 == x, p2 == y
-            if(player == CellStates.P1 && displayedValue == CellStatus.Piece.X ||
-               player == CellStates.P2 && displayedValue == CellStatus.Piece.O )
+            if (player == CellStates.P1 && displayedValue == CellStatus.Piece.X ||
+                player == CellStates.P2 && displayedValue == CellStatus.Piece.O)
             {
                 matches++;
             }

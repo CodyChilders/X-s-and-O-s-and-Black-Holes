@@ -4,6 +4,16 @@ using System.Collections;
 public class AudioManager : MonoBehaviour
 {
     private AudioSource source;
+    private InputManager gameState;
+
+    void Start()
+    {
+        gameState = GetComponent<InputManager>();
+        if (gameState == null)
+        {
+            Debug.LogError("Error locating the Input Manager for the Audio Manager");
+        }
+    }
 
     private void PlayOneShot(AudioClip clip, float volume = 1f)
     {
@@ -102,7 +112,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip projectileDetonateHarmlessly;
     public void SWProjectileDenotateHarmlessly() 
     {
-        PlayOneShot(projectileDetonateHarmlessly);
+        if(gameState.CurrentState == InputManager.GameState.Spacewar)
+            PlayOneShot(projectileDetonateHarmlessly);
     }
 
     public AudioClip engineThrottleUp;
