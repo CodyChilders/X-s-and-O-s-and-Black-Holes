@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class SWGameManager : MonoBehaviour
@@ -9,9 +10,11 @@ public class SWGameManager : MonoBehaviour
     public GameObject p1ShipStartPosition;
     public GameObject p2ShipStartPosition;
 
+    public Text countdownFirstElement;
+
     private InputManager im;
 
-    private enum SWState { Tutorial, PausedIntro, Game };
+    public enum SWState { Tutorial, PausedIntro, Game };
     private SWState currentState;
 
     private bool shownTutorial;
@@ -44,11 +47,11 @@ public class SWGameManager : MonoBehaviour
         SetShips();
         if (shownTutorial)
         {
-            currentState = SWState.PausedIntro;
+            SwitchToPausedIntro();
         }
         else
         {
-            currentState = SWState.Tutorial;
+            SwitchToTutorial();
             shownTutorial = true;
         }
     }
@@ -59,6 +62,15 @@ public class SWGameManager : MonoBehaviour
         p2Ship.transform.position = p2ShipStartPosition.transform.position;
         p1Ship.transform.LookAt(p2Ship.transform);
         p2Ship.transform.LookAt(p1Ship.transform);
+        //now disable them so that they aren't pulled in while the intro stuff is running
+        p1Ship.GetComponent<ShipControls>().ignoreBlackHolePull = true;
+        p2Ship.GetComponent<ShipControls>().ignoreBlackHolePull = true;
+    }
+
+    private void ActivateShips()
+    {
+        p1Ship.GetComponent<ShipControls>().ignoreBlackHolePull = false;
+        p2Ship.GetComponent<ShipControls>().ignoreBlackHolePull = false;
     }
 
     public void MarkShipAsDead(GameObject ship)
@@ -88,5 +100,34 @@ public class SWGameManager : MonoBehaviour
         }
         Board.CellStates win = (winner == 1 ? Board.CellStates.P1 : Board.CellStates.P2 );
         im.ResolveContestedBoard(win);
+    }
+
+    #region state switching
+    private void SwitchToGame()
+    {
+        currentState = SWState.Game;
+        ActivateShips();
+    }
+
+    private void SwitchToTutorial()
+    {
+        currentState = SWState.Tutorial;
+    }
+
+    private void SwitchToPausedIntro()
+    {
+        currentState = SWState.PausedIntro;
+        countdownFirstElement.gameObject.SetActive(true);
+        Invoke("SwitchToGame", 5); //5 second countdown to wait for, so the game will start at the same time it finishes
+    }
+
+    #endregion
+
+    public SWState GetState
+    {
+        get
+        {
+            return currentState;
+        }
     }
 }

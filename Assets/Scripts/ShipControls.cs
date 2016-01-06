@@ -13,6 +13,7 @@ public class ShipControls : MonoBehaviour
     public GameObject engineParticles;
     private ParticleSystem engine;
     private AudioManager audio;
+    private SWGameManager gameManager;
 
     public float blackHolePullStrength = 1f;
 
@@ -49,11 +50,14 @@ public class ShipControls : MonoBehaviour
         SetKeys();
         engine = engineParticles.GetComponent<ParticleSystem>();
         audio = gameController.GetComponent<AudioManager>();
+        gameManager = gameController.GetComponent<SWGameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gameManager.GetState != SWGameManager.SWState.Game)
+            return;
         #region debug keyboard controls
         /*
         if (Debug.isDebugBuild) //debug keyboard controls to be taken out later

@@ -8,6 +8,7 @@ public class DisableObject : MonoBehaviour {
     public float displayTime = 2f;
     public float fadeOutTime = 1f;
 
+    /*
     void Awake()
     {
         DOTween.Init(); 
@@ -30,5 +31,5 @@ public class DisableObject : MonoBehaviour {
         Image i = this.gameObject.GetComponent<Image>();
         i.DOFade(0, fadeOutTime);
     }
-
+    */
 }
