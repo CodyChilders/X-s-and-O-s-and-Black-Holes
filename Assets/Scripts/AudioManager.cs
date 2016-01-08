@@ -15,7 +15,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private void PlayOneShot(AudioClip clip, float volume = 1f)
+    private void LocateAudioSource()
     {
         if (source == null)
         {
@@ -27,6 +27,11 @@ public class AudioManager : MonoBehaviour
                 return;
             }
         }
+    }
+
+    private void PlayOneShot(AudioClip clip, float volume = 1f)
+    {
+        LocateAudioSource();
         if (clip == null)
         {
             Debug.LogError("Unable to play a null audio clip.");
@@ -35,24 +40,42 @@ public class AudioManager : MonoBehaviour
         if (volume < 0f || volume > 1f)
         {
             Debug.LogWarningFormat("Volume for clip {0} is out of range [0, 1]: {1}", clip, volume);
-            if (volume < 0f)
-                volume = 0f;
-            else
-                volume = 1f;
+            volume = Mathf.Clamp01(volume);
         }
         source.PlayOneShot(clip, volume);
+    }
+
+    private void PlayMusic(AudioClip music, float volume = 1f)
+    {
+        LocateAudioSource();
+        if (music == null)
+        {
+            Debug.LogError("Unable to play null audio track");
+            return;
+        }
+        if (volume < 0f || volume > 1f)
+        {
+            Debug.LogWarningFormat("Volume for clip {0} is out of range [0, 1]: {1}", music, volume);
+            volume = Mathf.Clamp01(volume);
+        }
+        if (source.isPlaying)
+        {
+            source.Stop();
+        }
+        source.clip = music;
+        source.Play();
     }
 
     public AudioClip tttMusic;
     public void StartTTTMusic()
     {
-        PlayOneShot(tttMusic);
+        PlayMusic(tttMusic);
     }
 
     public AudioClip swMusic;
     public void StartSWMusic()
     {
-        PlayOneShot(swMusic);
+        PlayMusic(swMusic);
     }
 
     public AudioClip placePiece;
