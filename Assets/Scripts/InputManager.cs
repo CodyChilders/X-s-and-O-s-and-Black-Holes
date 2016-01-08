@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class InputManager : MonoBehaviour
@@ -9,6 +10,8 @@ public class InputManager : MonoBehaviour
 
     public GameObject tttObjects;
     public GameObject swObjects;
+    public Canvas tttUI;
+    public Canvas swUI;
 
     private TTTGameManager ttt;
     private SWGameManager sw;
@@ -161,6 +164,7 @@ public class InputManager : MonoBehaviour
         currentState = GameState.TicTacToe;
         tttObjects.SetActive(true);
         swObjects.SetActive(false);
+        swUI.gameObject.SetActive(false);
         audio.StartTTTMusic();
         audio.SWTransitionToTTT();
     }
@@ -170,6 +174,7 @@ public class InputManager : MonoBehaviour
         currentState = GameState.Spacewar;
         tttObjects.SetActive(false);
         swObjects.SetActive(true);
+        swUI.gameObject.SetActive(true);
         sw.InitSW();
         audio.StartSWMusic();
         audio.TTTTransitionToSW();
