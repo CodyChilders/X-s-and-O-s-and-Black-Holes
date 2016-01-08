@@ -10,6 +10,15 @@ public class SWGameManager : MonoBehaviour
     public GameObject p1ShipStartPosition;
     public GameObject p2ShipStartPosition;
 
+    //UI elements
+    public Canvas tutorialCanvas;
+    //These are the "P1 press A" and "Ready" UI elements for 
+    public Text[] tutorialP1Items = new Text[2];
+    public Text[] tutorialP2Items = new Text[2];
+    private const int TutorialStep1 = 0;
+    private const int TutorialStep2 = 1;
+    private bool p1ReadTutorial = false;
+    private bool p2ReadTutorial = false;
     public Text countdownFirstElement;
 
     private InputManager im;
@@ -17,12 +26,11 @@ public class SWGameManager : MonoBehaviour
     public enum SWState { Tutorial, PausedIntro, Game };
     private SWState currentState;
 
-    private bool shownTutorial;
+    private bool shownTutorial = false;
 
     void Start()
     {
         im = GetComponent<InputManager>();
-        shownTutorial = false;
     }
 
     public void UpdateSW()
@@ -33,10 +41,11 @@ public class SWGameManager : MonoBehaviour
                 //nothing needs to run every frame in this state
                 break;
             case SWState.PausedIntro:
-                //resolve countdown timers while player gets ready
+                //nothing needs to run every frame in this state
                 break;
             case SWState.Tutorial:
                 //wait for player input so both know the instructions, then switch to paused intro
+                UpdateTutorial();
                 break;
         }
     }
@@ -54,6 +63,28 @@ public class SWGameManager : MonoBehaviour
             SwitchToTutorial();
             shownTutorial = true;
         }
+    }
+
+    private void UpdateTutorial()
+    {
+        //check button press for player 1
+        if(Input.GetButtonDown("P1_Primary") && !p1ReadTutorial)
+        {
+            p1ReadTutorial = true;
+            tutorialP1Items[TutorialStep1].gameObject.SetActive(false);
+            tutorialP1Items[TutorialStep2].gameObject.SetActive(true);
+            
+        }
+        //check press for p2
+        if (Input.GetButtonDown("P2_Primary") && !p2ReadTutorial)
+        {
+            p2ReadTutorial = true;
+            tutorialP2Items[TutorialStep1].gameObject.SetActive(false);
+            tutorialP2Items[TutorialStep2].gameObject.SetActive(true);
+        }
+        //if both states are resolved, switch to paused intro
+        if(p1ReadTutorial && p2ReadTutorial)
+            SwitchToPausedIntro();
     }
 
     private void SetShips()
@@ -112,15 +143,26 @@ public class SWGameManager : MonoBehaviour
     private void SwitchToTutorial()
     {
         currentState = SWState.Tutorial;
+        tutorialCanvas.gameObject.SetActive(true);
+        tutorialP1Items[TutorialStep1].gameObject.SetActive(true);
+        tutorialP2Items[TutorialStep1].gameObject.SetActive(true);
+        tutorialP1Items[TutorialStep2].gameObject.SetActive(false);
+        tutorialP2Items[TutorialStep2].gameObject.SetActive(false);
+    }
+
+    private void SwitchFromTutorial()
+    {
+        tutorialCanvas.gameObject.SetActive(false);
     }
 
     private void SwitchToPausedIntro()
     {
+        if (currentState == SWState.Tutorial)
+            SwitchFromTutorial();
         currentState = SWState.PausedIntro;
         countdownFirstElement.gameObject.SetActive(true);
         Invoke("SwitchToGame", 5); //5 second countdown to wait for, so the game will start at the same time it finishes
     }
-
     #endregion
 
     public SWState GetState

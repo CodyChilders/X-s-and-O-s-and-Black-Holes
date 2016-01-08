@@ -250,6 +250,8 @@ public class ShipControls : MonoBehaviour
         {
             velocity.Normalize();
             velocity *= maxSpeed;
+            Color c = (playerNumber == 1 ? Color.red : Color.blue);
+            Debug.DrawLine(this.transform.position, this.transform.position + velocity, c, 25);
             this.transform.Translate(velocity, Space.World);
         }
         else
